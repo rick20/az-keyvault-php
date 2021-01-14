@@ -122,4 +122,22 @@ class Secret extends Vault {
 
         return $idRepository;
     }
+
+    /**
+     * Set the value for given secret,
+     * either by passing an instance of
+     * SecretVersionEntity or by secret
+     * name and version
+     * @param SecretVersionEntity|string $secret
+     * @param string|null $secretVersion
+     * @return AzKeyVault\Secret
+     */
+    public function setSecret($secret, $value, string $secretVersion = null) {
+
+        $endpoint = Url::fromString($this->vaultUrl)->withPath(sprintf('/secrets/%s', $secret));
+
+        $response = $this->client->put($endpoint, ['value' => $value]);
+
+        return $this;
+    }
 }

@@ -40,6 +40,23 @@ class Client {
     }
 
     /**
+     * Wrapper for HTTP PUT requests
+     * @param $url
+     * @param array $data
+     * @param string $accessToken
+     * @param string $accessTokenHeader
+     * @param string $apiVersion
+     * @return mixed
+     */
+    public function put(string $url, array $data, string $accessToken = null, string $accessTokenHeader = 'Authorization', string $apiVersion = self::VAULT_API_VERSION) {
+        $url = Url::fromString($url)->withQueryParameter('api-version', $apiVersion);
+        return json_decode($this->client->put($url, [
+            'json' => $data,
+            'headers' => [$accessTokenHeader => $accessToken ?? $this->accessToken],
+        ])->getBody());
+    }
+
+    /**
      * Get access token using managed identity
      * @return string
      */
